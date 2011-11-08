@@ -25,7 +25,7 @@ function summary {
 
 function save {
   echo "Saving :"
-  curl --retry 3 --data-urlencode "name=$TASK_NAME" --data-urlencode "command=$COMMAND" --data-urlencode "executed_at=$EXECUTED_AT" --data-urlencode "runtime=$RUNTIME" --data-urlencode "exit_code=$EXIT_CODE" --data-urlencode "stdout=$STDOUT" --data-urlencode "stderr=$STDERR" $QUIIN_SERVER
+  curl --retry 3 -d "name=$TASK_NAME" -d "command=$COMMAND" -d "executed_at=$EXECUTED_AT" -d "runtime=$RUNTIME" -d "exit_code=$EXIT_CODE" -d "stdout=$STDOUT" -d "stderr=$STDERR" $QUIIN_SERVER
 }
 
 function clean {
