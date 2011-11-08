@@ -1,41 +1,21 @@
-if [[ -z $QUIIN_SERVER ]]; then QUIIN_SERVER="http://localhost:4567"; fi
-if [[ -z $TASK_NAME ]];    then TASK_NAME=""; fi
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
+require 'popen4'
+require 'net/http'
 
-function quiin {
-  QUIIN_STDOUT=`mktemp`
-  QUIIN_STDERR=`mktemp`
-  EXECUTED_AT=$(date +"%Y-%m-%d %H:%M:%S")
-  START_TIME=$(date +%s)
-  COMMAND=$@
-  eval $COMMAND > $QUIIN_STDOUT 2> $QUIIN_STDERR
-  EXIT_CODE=$?
-  END_TIME=$(date +%s)
-  RUNTIME=$(( $END_TIME - $START_TIME ))
-  STDOUT=`cat $QUIIN_STDOUT`
-  STDERR=`cat $QUIIN_STDERR`
-}
+start_time           = Time.now
+observed_task        = { :command => ARGV.join(" ") }
+observed_task[:name] = ENV["TASK_NAME"] || observed_task[:command]
+status =  POpen4::popen4( observed_task[:command] ) do |stdout, stderr, stdin, pid|
+  observed_task[:stdout] = stdout.read.strip
+  observed_task[:stderr] = stderr.read.strip
+end
+observed_task[:runtime]     = Time.now - start_time
+observed_task[:exit_code]   = status.exitstatus
+observed_task[:executed_at] = start_time.to_s
 
-function summary {
-  echo "Command '$COMMAND'"
-  echo "It took $RUNTIME seconds"
-  echo "Exit code $EXIT_CODE"
-  echo "STDOUT: $STDOUT" 
-  echo "STDERR: $STDERR"
-}
-
-function save {
-  echo "Saving :"
-  curl --retry 3 -d "name=$TASK_NAME" -d "command=$COMMAND" -d "executed_at=$EXECUTED_AT" -d "runtime=$RUNTIME" -d "exit_code=$EXIT_CODE" -d "stdout=$STDOUT" -d "stderr=$STDERR" $QUIIN_SERVER
-}
-
-function clean {
-  echo "Deleting tmp files"
-  rm $QUIIN_STDOUT $QUIIN_STDERR
-}
-
-echo "Quiin"
-quiin $@ && 
-summary &&
-save
-clean &&
-echo "Finished"
+uri = URI('http://localhost:4567/')
+res = Net::HTTP.post_form(uri, observed_task)
+observed_task.each {|key, value| puts key.upcase; puts value }
+puts "\nSaving:"
+puts res.code == "200" ? "Task saved!" : res.body

@@ -9,10 +9,10 @@
   - runs.each do |run|
     .run.span-24.last{:class => run.exit_code == "0" ? "successful_run" : "failed_run" }
       .task.span-11
-        %a{:href => "/show/#{run.id}"}
+        %a{:href => "/#{run.id}"}
           = run.name || run.command
       .exit_code.span-4= run.exit_code
       .runtime.span-4= "#{run.runtime} seconds"
-      .executed_at.span-5.last= run.executed_at.strftime("%Y-%m%d %H:%M:%S")
+      .executed_at.span-5.last= readable_datetime run.executed_at
   .span-24.last.pagination
     = will_paginate runs

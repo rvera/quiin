@@ -13,6 +13,10 @@ a
   font-weight:bold;
   color: $detail_color
 }
+a:focus, a:hover 
+{
+  color: $success_text_color;
+}
 
 @mixin shadow {
   -moz-box-shadow: 5px 5px 5px #ccc;

@@ -5,7 +5,9 @@
   .span-24.last
     .span-8
       .field
-        %h3 Exit Code
+        %h3 
+          Exit Code
+          %span (bash)          
         %span.content=run.exit_code
     .span-8
       .field
@@ -18,7 +20,7 @@
         %h3 
           Executed at 
           %span (local machine time)
-        %span.content=run.executed_at.strftime("%Y-%m%d %H:%M:%S")
+        %span.content=readable_datetime run.executed_at
   .field
     %h3 STDOUT
     %pre.content= run.stdout == "" ? "Empty" : run.stdout
