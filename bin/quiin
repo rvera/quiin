@@ -2,8 +2,8 @@ if [[ -z $QUIIN_SERVER ]]; then QUIIN_SERVER="http://localhost:4567"; fi
 if [[ -z $TASK_NAME ]];    then TASK_NAME=""; fi
 
 function quiin {
-  QUIIN_STDOUT=`tempfile`
-  QUIIN_STDERR=`tempfile`
+  QUIIN_STDOUT=`mktemp`
+  QUIIN_STDERR=`mktemp`
   EXECUTED_AT=$(date +"%Y-%m-%d %H:%M:%S")
   START_TIME=$(date +%s)
   COMMAND=$@
