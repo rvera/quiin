@@ -1,0 +1,41 @@
+if [[ -z $QUIIN_SERVER ]]; then QUIIN_SERVER="http://localhost:4567"; fi
+if [[ -z $TASK_NAME ]];    then TASK_NAME=""; fi
+
+function quiin {
+  QUIIN_STDOUT=`tempfile`
+  QUIIN_STDERR=`tempfile`
+  EXECUTED_AT=$(date +"%Y-%m-%d %H:%M:%S")
+  START_TIME=$(date +%s)
+  COMMAND=$@
+  eval $COMMAND > $QUIIN_STDOUT 2> $QUIIN_STDERR
+  EXIT_CODE=$?
+  END_TIME=$(date +%s)
+  RUNTIME=$(( $END_TIME - $START_TIME ))
+  STDOUT=`cat $QUIIN_STDOUT`
+  STDERR=`cat $QUIIN_STDERR`
+}
+
+function summary {
+  echo "Command '$COMMAND'"
+  echo "It took $RUNTIME seconds"
+  echo "Exit code $EXIT_CODE"
+  echo "STDOUT: $STDOUT" 
+  echo "STDERR: $STDERR"
+}
+
+function save {
+  echo "Saving :"
+  curl --retry 3 --data-urlencode "name=$TASK_NAME" --data-urlencode "command=$COMMAND" --data-urlencode "executed_at=$EXECUTED_AT" --data-urlencode "runtime=$RUNTIME" --data-urlencode "exit_code=$EXIT_CODE" --data-urlencode "stdout=$STDOUT" --data-urlencode "stderr=$STDERR" $QUIIN_SERVER
+}
+
+function clean {
+  echo "Deleting tmp files"
+  rm $QUIIN_STDOUT $QUIIN_STDERR
+}
+
+echo "Quiin"
+quiin $@ && 
+summary &&
+save
+clean &&
+echo "Finished"

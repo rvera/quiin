@@ -1,0 +1,18 @@
+.span-24.last.index
+  .span-24.last.pagination
+    = will_paginate runs
+  .span-24.last.run.headers
+    .task.span-11 Task
+    .exit_code.span-4  Exit Code
+    .runtime.span-4  Runtime
+    .executed_at.span-5.last  Executed at
+  - runs.each do |run|
+    .run.span-24.last{:class => run.exit_code == "0" ? "successful_run" : "failed_run" }
+      .task.span-11
+        %a{:href => "/show/#{run.id}"}
+          = run.name || run.command
+      .exit_code.span-4= run.exit_code
+      .runtime.span-4= "#{run.runtime} seconds"
+      .executed_at.span-5.last= run.executed_at.strftime("%Y-%m%d %H:%M:%S")
+  .span-24.last.pagination
+    = will_paginate runs

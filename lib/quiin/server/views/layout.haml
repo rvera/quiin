@@ -1,0 +1,18 @@
+!!!
+%html
+  %head
+    %title Quiin
+  %link{:href => "/stylesheets/screen.css", :media => "screen, projection", :rel => "stylesheet", :type => "text/css"}
+  %link{:href => "/stylesheets/print.css", :media => "print", :rel => "stylesheet", :type => "text/css"}
+  /[if lt IE 8] <link rel="stylesheet" href="/stylesheets/ie.css" type="text/css" media="screen, projection">
+  %link{:href => "/stylesheets/application.css", :rel => "stylesheet",  :type => "text/css" }
+%body
+  #header
+    .container
+      %a{:href => "/"}
+        %h1
+          Quiin
+  #content.container
+    = yield
+  #footer
+      
