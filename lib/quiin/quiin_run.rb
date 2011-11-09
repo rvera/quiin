@@ -19,6 +19,10 @@ module Quiin
       quiin_run.name = quiin_run.command if quiin_run.name.nil? || quiin_run.name.strip == ""
     end
 
+    def shortname
+      name.length > 60 ? "#{name[0..55]} ..." : name
+    end
+
   end
   QuiinRun.raise_on_save_failure = true
 

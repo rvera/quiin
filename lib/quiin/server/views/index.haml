@@ -10,7 +10,7 @@
     .run.span-24.last{:class => run.exit_code == "0" ? "successful_run" : "failed_run" }
       .task.span-11
         %a{:href => "/#{run.id}"}
-          = run.name || run.command
+          = run.shortname
       .exit_code.span-4= run.exit_code
       .runtime.span-4= "#{run.runtime} seconds"
       .executed_at.span-5.last= readable_datetime run.executed_at

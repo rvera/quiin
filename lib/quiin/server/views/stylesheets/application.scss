@@ -48,6 +48,10 @@ a:focus, a:hover
   .index
   {
     .pagination{ text-align:center; padding-top: 5px; padding-bottom:5px;}
+    .task
+    {
+      overflow:hidden;
+    }
     .exit_code, .runtime, .executed_at 
     {
       text-align:right;
@@ -67,21 +71,30 @@ a:focus, a:hover
     }
     .successful_run  
     {
-      
+      @include shadow;
+      border           : 1px  solid $header_top_color;
+      margin-top       : 1px;
+      margin-bottom    : 1px;
+      border-radius    : 2px;
     }
     .failed_run
     {
-      position:relative;
-      left:-3px;
       @include shadow;
-      background-color: $fail_color;
-      margin-top:5px;
-      margin-bottom:8px;
-      a { color : $fail_text_color; }
-      padding:6px;
-      background-clip: border-box;
+      border           : 1px  solid $fail_text_color;
+      margin-top       : 2px;
+      margin-bottom    : 2px;
+      border-radius    : 2px;
+
+      position         : relative;
+      top              :-2px;
+      left             :-4px;
+
+      background-color : $fail_color;
+      a { color        : $fail_text_color; }
+      padding          : 4px;
+      background-clip  : border-box;
       background-origin: padding-box;
-      border-radius:  3px;
+      
     }
   }
 
@@ -139,7 +152,11 @@ a:focus, a:hover
         padding-right: 10px;
         padding-top: 10px;
         vertical-align: baseline;
-      }        
+      }
+      pre.content
+      {
+        overflow-x:auto;
+      }    
     }      
   }  
 }
