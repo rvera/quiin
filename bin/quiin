@@ -6,16 +6,23 @@ require 'net/http'
 start_time           = Time.now
 observed_task        = { :command => ARGV.join(" ") }
 observed_task[:name] = ENV["TASK_NAME"] || observed_task[:command]
+puts "Executing '#{observed_task[:command]}'"
 status =  POpen4::popen4( observed_task[:command] ) do |stdout, stderr, stdin, pid|
   observed_task[:stdout] = stdout.read.strip
   observed_task[:stderr] = stderr.read.strip
 end
+raise "Command '#{observed_task[:command]}' could not be started" unless status
 observed_task[:runtime]     = Time.now - start_time
 observed_task[:exit_code]   = status.exitstatus
 observed_task[:executed_at] = start_time.to_s
+observed_task.each {|key, value| puts key.upcase; puts value }
 
+puts "\nSaving:"
 uri = URI('http://localhost:4567/')
 res = Net::HTTP.post_form(uri, observed_task)
-observed_task.each {|key, value| puts key.upcase; puts value }
-puts "\nSaving:"
-puts res.code == "200" ? "Task saved!" : res.body
+if res.code == "200" 
+  puts "Task saved!" 
+else
+  res.body
+  raise "Could not send details to server"
+end
