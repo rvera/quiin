@@ -28,8 +28,10 @@ module Quiin
     end
 
     get '/' do
-      runs = QuiinRun.all(:order => [:created_at.desc]).paginate(:page => params[:page], :per_page => 20)
-      haml :index, :locals => {:runs => runs }
+      timespan = (params[:problem_timespan_in_days] || 3) * 86400
+      problems = QuiinRun.problematic_runs_since(DateTime.now - timespan)
+      runs     = QuiinRun.all(:order => [:executed_at.desc]).paginate(:page => params[:page], :per_page => 20)
+      haml :index, :locals => {:runs => runs, :problems => problems, :timespan => timespan }
     end
 
     get '/:id' do

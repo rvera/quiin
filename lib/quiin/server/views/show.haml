@@ -1,7 +1,7 @@
 .command_description
   .field
     %h2= run.name
-    %span.content{:class => run.exit_code == "0" ? "successful_run" : "failed_run" }=run.command
+    %span.content{:class => type_of_run(run) }=run.command
   .span-24.last
     .span-8
       .field

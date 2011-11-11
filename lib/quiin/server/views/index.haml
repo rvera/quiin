@@ -1,13 +1,31 @@
+- if problems.length != 0
+  .span-24.last.index
+    %h3.cabecera Errors
+    .span-24.last.run.headers
+      .task.span-11 Tasks with errors or warnings in the last #{timespan/86400} days
+      .exit_code.span-4  Exit Code
+      .runtime.span-4  Runtime
+      .executed_at.span-5.last  Executed at
+    - problems.each do |run|
+      .run.span-24.last{:class => type_of_run(run)}
+        .task.span-11
+          %a{:href => "/#{run.id}"}
+            = run.shortname
+        .exit_code.span-4= run.exit_code
+        .runtime.span-4= "#{run.runtime} seconds"
+        .executed_at.span-5.last= readable_datetime run.executed_at
+
 .span-24.last.index
   .span-24.last.pagination
     = will_paginate runs
+  %h3.cabecera Recent
   .span-24.last.run.headers
     .task.span-11 Task
     .exit_code.span-4  Exit Code
     .runtime.span-4  Runtime
     .executed_at.span-5.last  Executed at
   - runs.each do |run|
-    .run.span-24.last{:class => run.exit_code == "0" ? "successful_run" : "failed_run" }
+    .run.span-24.last{:class => type_of_run(run)}
       .task.span-11
         %a{:href => "/#{run.id}"}
           = run.shortname
