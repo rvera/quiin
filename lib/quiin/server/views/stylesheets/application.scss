@@ -48,6 +48,13 @@ a:focus, a:hover
 {
   font-size:14px;
 
+  .alert
+  {
+      a { color        : $warning_text_color; }
+      border           : 1px  solid $warning_text_color;
+      background-color : $warning_color;
+  }
+
   .index
   {
     margin-bottom:20px;
@@ -88,7 +95,18 @@ a:focus, a:hover
       padding:3px;
       background-color: white
     }
-    .successful_run  
+    .row
+    {
+      @include shadow;
+      background-color : white;
+      padding          : 3px;
+      text-align       : center;
+      border           : 1px  solid $header_top_color;
+      margin-top       : 0px;
+      margin-bottom    : 0px;
+      border-radius    : 2px;
+    }
+    .successful_run
     {
       @include shadow;
       border           : 1px  solid $header_top_color;

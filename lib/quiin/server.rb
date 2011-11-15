@@ -19,6 +19,12 @@ module Quiin
      scss :"stylesheets/application", :style => :expanded
     end
 
+    get '/problems' do
+      timespan  = (params[:timespan_in_days].to_i || 3) * 86400
+      problems  = QuiinRun.problematic_runs_since(DateTime.now - timespan).all(:order => [:executed_at.desc])
+      haml :problems, :locals => {:problems => problems, :timespan => timespan }
+    end
+
     post '/' do
       begin
         QuiinRun.create(params).to_json
@@ -28,7 +34,7 @@ module Quiin
     end
 
     get '/' do
-      timespan = (params[:problem_timespan_in_days] || 1) * 86400
+      timespan = 86400 * 3
       problems = QuiinRun.problematic_runs_since(DateTime.now - timespan)
       runs     = QuiinRun.all(:order => [:executed_at.desc]).paginate(:page => params[:page], :per_page => 20)
       haml :index, :locals => {:runs => runs, :problems => problems, :timespan => timespan }
